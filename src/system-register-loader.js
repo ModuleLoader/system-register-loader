@@ -29,9 +29,10 @@ function SystemRegisterLoader(baseKey) {
 SystemRegisterLoader.prototype = Object.create(RegisterLoader.prototype);
 
 // normalize is never given a relative name like "./x", that part is already handled
-// so we just need to do plain name normalization here
-// for this loader, identity is enough to get URL-like normalization
+// so we just need to do plain name detect to throw as in the WhatWG spec
 SystemRegisterLoader.prototype.normalize = function(key, parent, metadata) {
+  if (key.indexOf(':') === -1)
+    throw new RangeError('System.register loader does not resolve plain module names, resolving "' + key + '" to ' + parent);
   return key;
 };
 
