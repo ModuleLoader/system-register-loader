@@ -1,0 +1,15 @@
+{
+  "name": "system-register-loader",
+  "version": "0.1.0",
+  "description": "Loads System.register modules in the browser and Node",
+  "main": "system-register-loader.js",
+  "author": "Guy Bedford",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^0.34.7",
+    "rollup-plugin-node-resolve": "^2.0.0"
+  }
+}
