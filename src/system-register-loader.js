@@ -1,5 +1,5 @@
 import RegisterLoader from 'es-module-loader/core/register-loader.js';
-import { isBrowser, isNode, envGlobal as global, baseURI } from 'es-module-loader/core/common.js';
+import { isBrowser, isNode, global, baseURI } from 'es-module-loader/core/common.js';
 import { resolveUrlToParentIfNotPlain } from 'es-module-loader/core/resolve.js';
 import { scriptLoad, nodeFetch } from 'es-module-loader/core/fetch.js';
 
