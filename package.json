@@ -5,11 +5,12 @@
   "main": "system-register-loader.js",
   "author": "Guy Bedford",
   "license": "MIT",
-  "scripts": {
-    "build": "rollup -c"
-  },
   "devDependencies": {
     "rollup": "^0.34.7",
     "rollup-plugin-node-resolve": "^2.0.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "prepublish": "rollup -c"
   }
 }

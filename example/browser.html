@@ -1,0 +1,8 @@
+<!doctype html>
+  <script src="../dist/system-register-loader.js"></script>
+  <script>
+    var loader = new SystemRegisterLoader();
+    loader.import('./register.js').then(function(m) {
+      console.log(m);
+    });
+  </script>

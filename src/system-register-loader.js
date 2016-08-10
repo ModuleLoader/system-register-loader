@@ -2,7 +2,6 @@ import RegisterLoader from 'es-module-loader/core/register-loader.js';
 import { isBrowser, isNode, envGlobal as global, baseURI } from 'es-module-loader/core/common.js';
 import { resolveUrlToParentIfNotPlain } from 'es-module-loader/core/resolve.js';
 import { scriptLoad, nodeFetch } from 'es-module-loader/core/fetch.js';
-import { loadModuleScripts } from 'es-module-loader/core/module-scripts.js';
 
 /*
  * Example System Register loader
@@ -12,7 +11,7 @@ import { loadModuleScripts } from 'es-module-loader/core/module-scripts.js';
  * If the module does not call System.register, an error will be thrown
  */
 function SystemRegisterLoader(baseKey) {
-  baseKey = resolveUrlToParentIfNotPlain(baseKey, baseURI) || baseKey;
+  baseKey = resolveUrlToParentIfNotPlain(baseKey || (isNode ? process.cwd() : '.'), baseURI) || baseKey;
   RegisterLoader.call(this, baseKey);
 
   var loader = this;
@@ -22,9 +21,6 @@ function SystemRegisterLoader(baseKey) {
   global.System.register = function() {
     loader.register.apply(loader, arguments);
   };
-
-  // support <script type="module"> tag in browsers
-  loadModuleScripts(this);
 }
 SystemRegisterLoader.prototype = Object.create(RegisterLoader.prototype);
 
