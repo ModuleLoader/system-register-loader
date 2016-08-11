@@ -1,6 +1,6 @@
 {
   "name": "system-register-loader",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Loads System.register modules in the browser and Node",
   "main": "system-register-loader.js",
   "author": "Guy Bedford",
