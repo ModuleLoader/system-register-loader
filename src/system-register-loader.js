@@ -45,12 +45,12 @@ SystemRegisterLoader.prototype.instantiate = function(key, metadata) {
     if (isNode)
       nodeFetch(key, undefined, function(source) {
         eval(source);
-        loader.processRegisterQueue(key);
+        loader.processRegisterContext(key);
         resolve();
       }, reject);
     else if (isBrowser)
       scriptLoad(key, function() {
-        loader.processRegisterQueue(key);
+        loader.processRegisterContext(key);
         resolve();
       }, reject);
     else
