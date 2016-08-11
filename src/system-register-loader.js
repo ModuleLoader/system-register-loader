@@ -18,8 +18,12 @@ function SystemRegisterLoader(baseKey) {
   
   // ensure System.register is available
   global.System = global.System || {};
+  if (typeof global.System.register == 'function')
+    var prevRegister = global.System.register;
   global.System.register = function() {
     loader.register.apply(loader, arguments);
+    if (prevRegister)
+      prevRegister.apply(this, arguments);
   };
 }
 SystemRegisterLoader.prototype = Object.create(RegisterLoader.prototype);
