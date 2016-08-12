@@ -46,12 +46,11 @@ SystemRegisterLoader.prototype.instantiate = function(key, metadata) {
     if (isNode)
       Promise.resolve(fs || (fs = typeof require !== 'undefined' ? require('fs') : loader.import('fs').then(m => m.default)))
       .then(function(fs) {
-        console.log(fs);
         fs.readFile(fileUrlToPath(key), function(err, source) {
           if (err)
             return reject(err);
 
-          (0, eval)(source);
+          (0, eval)(source.toString());
           thisLoader.processRegisterContext(key);
           resolve();
         });
