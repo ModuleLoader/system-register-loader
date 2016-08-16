@@ -44,7 +44,7 @@ SystemRegisterLoader.prototype.instantiate = function(key, metadata) {
 
   return new Promise(function(resolve, reject) {
     if (isNode)
-      Promise.resolve(fs || (fs = typeof require !== 'undefined' ? require('fs') : loader.import('fs').then(m => m.default)))
+      Promise.resolve(fs || (fs = typeof require !== 'undefined' ? require('fs') : loader.import('fs').then(function(m){ return m.default })))
       .then(function(fs) {
         fs.readFile(fileUrlToPath(key), function(err, source) {
           if (err)
