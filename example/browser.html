@@ -2,6 +2,7 @@
   <script src="../dist/system-register-loader.js"></script>
   <script>
     var loader = new SystemRegisterLoader();
+    loader.trace = true;
     loader.import('./register.js').then(function(m) {
       console.log(m);
     });

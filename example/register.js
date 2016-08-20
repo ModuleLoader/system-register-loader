@@ -1,4 +1,4 @@
-System.register([], function($__export) {
+System.register(['./dep.js'], function($__export) {
   return function() {
     $__export({
       hello: 'world'
