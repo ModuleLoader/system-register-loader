@@ -29,7 +29,7 @@ SystemRegisterLoader.prototype = Object.create(RegisterLoader.prototype);
 
 // normalize is never given a relative name like "./x", that part is already handled
 // so we just need to do plain name detect to throw as in the WhatWG spec
-SystemRegisterLoader.prototype.normalize = function(key, parent, metadata) {
+SystemRegisterLoader.prototype[RegisterLoader.normalize] = function(key, parent, metadata) {
   var resolved = RegisterLoader.prototype.normalize.call(this, key, parent, metadata);
   if (!resolved)
     throw new RangeError('System.register loader does not resolve plain module names, resolving "' + key + '" to ' + parent);
@@ -40,7 +40,7 @@ var fs;
 
 // instantiate just needs to run System.register
 // so we load the module name as a URL, and expect that to run System.register
-SystemRegisterLoader.prototype.instantiate = function(key, metadata) {
+SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function(key, metadata) {
   var thisLoader = this;
 
   return new Promise(function(resolve, reject) {
