@@ -51,7 +51,12 @@ SystemRegisterLoader.prototype.instantiate = function(key, metadata) {
           if (err)
             return reject(err);
 
-          (0, eval)(source.toString());
+          // Strip Byte Order Mark out if it's the leading char
+          var sourceString = source.toString();
+          if (sourceString[0] === '\ufeff')
+            sourceString = sourceString.substr(1);
+
+          (0, eval)(sourceString);
           thisLoader.processRegisterContext(key);
           resolve();
         });
@@ -65,29 +70,6 @@ SystemRegisterLoader.prototype.instantiate = function(key, metadata) {
       throw new Error('No fetch system defined for this environment.');
   });
 };
-
-function nodeFetch(url, authorization, fulfill, reject) {
-  if (url.substr(0, 8) != 'file:///')
-    throw new Error('Unable to fetch "' + url + '". Only file URLs of the form file:/// allowed running in Node.');
-  fs = fs || module.require('fs');
-  if (isWindows)
-    url = url.replace(/\//g, '\\').substr(8);
-  else
-    url = url.substr(7);
-  return fs.readFile(url, function(err, data) {
-    if (err) {
-      return reject(err);
-    }
-    else {
-      // Strip Byte Order Mark out if it's the leading char
-      var dataString = data + '';
-      if (dataString[0] === '\ufeff')
-        dataString = dataString.substr(1);
-
-      fulfill(dataString);
-    }
-  });
-}
 
 function scriptLoad(src, resolve, reject) {
   var script = document.createElement('script');
