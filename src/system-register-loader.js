@@ -10,11 +10,13 @@ import { resolveUrlToParentIfNotPlain } from 'es-module-loader/core/resolve.js';
  * If the module does not call System.register, an error will be thrown
  */
 function SystemRegisterLoader(baseKey) {
-  baseKey = resolveUrlToParentIfNotPlain(baseKey || (isNode ? process.cwd() : '.'), baseURI) || baseKey;
+  if (baseKey)
+    baseKey = resolveUrlToParentIfNotPlain(baseKey, baseURI) || resolveUrlToParentIfNotPlain('./' + baseKey, baseURI);
+  
   RegisterLoader.call(this, baseKey);
 
   var loader = this;
-  
+
   // ensure System.register is available
   global.System = global.System || {};
   if (typeof global.System.register == 'function')
