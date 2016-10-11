@@ -12,7 +12,7 @@ import { resolveUrlToParentIfNotPlain } from 'es-module-loader/core/resolve.js';
 function SystemRegisterLoader(baseKey) {
   if (baseKey)
     baseKey = resolveUrlToParentIfNotPlain(baseKey, baseURI) || resolveUrlToParentIfNotPlain('./' + baseKey, baseURI);
-  
+
   RegisterLoader.call(this, baseKey);
 
   var loader = this;
@@ -42,6 +42,7 @@ var fs;
 
 // instantiate just needs to run System.register
 // so we load the module name as a URL, and expect that to run System.register
+var PROCESS_REGISTER_CONTEXT = RegisterLoader.processRegisterContext;
 SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function(key, metadata) {
   var thisLoader = this;
 
@@ -59,13 +60,13 @@ SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function(key, metad
             sourceString = sourceString.substr(1);
 
           (0, eval)(sourceString);
-          thisLoader.processRegisterContext(key);
+          thisLoader[PROCESS_REGISTER_CONTEXT](key);
           resolve();
         });
       });
     else if (isBrowser)
       scriptLoad(key, function() {
-        thisLoader.processRegisterContext(key);
+        thisLoader[PROCESS_REGISTER_CONTEXT](key);
         resolve();
       }, reject);
     else
