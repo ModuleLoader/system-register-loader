@@ -9,7 +9,7 @@ import { resolveUrlToParentIfNotPlain } from 'es-module-loader/core/resolve.js';
  * Uses <script> injection in the browser, and fs in Node
  * If the module does not call System.register, an error will be thrown
  */
-function SystemRegisterLoader(baseKey) {
+function SystemRegisterLoader (baseKey) {
   if (baseKey)
     baseKey = resolveUrlToParentIfNotPlain(baseKey, baseURI) || resolveUrlToParentIfNotPlain('./' + baseKey, baseURI);
 
@@ -19,19 +19,26 @@ function SystemRegisterLoader(baseKey) {
 
   // ensure System.register is available
   global.System = global.System || {};
-  if (typeof global.System.register == 'function')
+  if (typeof global.System.register === 'function')
     var prevRegister = global.System.register;
-  global.System.register = function() {
+  if (typeof global.System.registerDynamic === 'function')
+    var prevRegisterDynamic = global.System.registerDynamic;
+  global.System.register = function () {
     loader.register.apply(loader, arguments);
     if (prevRegister)
       prevRegister.apply(this, arguments);
+  };
+  global.System.registerDynamic = function () {
+    loader.registerDynamic.apply(loader, arguments);
+    if (prevRegisterDynamic)
+      prevRegisterDynamic.apply(this, arguments);
   };
 }
 SystemRegisterLoader.prototype = Object.create(RegisterLoader.prototype);
 
 // normalize is never given a relative name like "./x", that part is already handled
 // so we just need to do plain name detect to throw as in the WhatWG spec
-SystemRegisterLoader.prototype[RegisterLoader.normalize] = function(key, parent, metadata) {
+SystemRegisterLoader.prototype[RegisterLoader.normalize] = function (key, parent, metadata) {
   var resolved = RegisterLoader.prototype.normalize.call(this, key, parent, metadata);
   if (!resolved)
     throw new RangeError('System.register loader does not resolve plain module names, resolving "' + key + '" to ' + parent);
@@ -43,14 +50,14 @@ var fs;
 // instantiate just needs to run System.register
 // so we load the module name as a URL, and expect that to run System.register
 var PROCESS_REGISTER_CONTEXT = RegisterLoader.processRegisterContext;
-SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function(key, metadata) {
+SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function (key, metadata) {
   var thisLoader = this;
 
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     if (isNode)
-      Promise.resolve(fs || (fs = typeof require !== 'undefined' ? require('fs') : loader.import('fs').then(function(m){ return m.default })))
-      .then(function(fs) {
-        fs.readFile(fileUrlToPath(key), function(err, source) {
+      Promise.resolve(fs || (fs = typeof require !== 'undefined' ? require('fs') : loader.import('fs').then(function (m){ return m.default })))
+      .then(function (fs) {
+        fs.readFile(fileUrlToPath(key), function (err, source) {
           if (err)
             return reject(err);
 
@@ -65,7 +72,7 @@ SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function(key, metad
         });
       });
     else if (isBrowser)
-      scriptLoad(key, function() {
+      scriptLoad(key, function () {
         thisLoader[PROCESS_REGISTER_CONTEXT](key);
         resolve();
       }, reject);
@@ -74,7 +81,7 @@ SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function(key, metad
   });
 };
 
-function scriptLoad(src, resolve, reject) {
+function scriptLoad (src, resolve, reject) {
   var script = document.createElement('script');
   script.type = 'text/javascript';
   script.charset = 'utf-8';
@@ -86,17 +93,17 @@ function scriptLoad(src, resolve, reject) {
   script.src = src;
   document.head.appendChild(script);
 
-  function load() {
+  function load () {
     resolve();
     cleanup();
   }
 
-  function error(err) {
+  function error (err) {
     cleanup();
     reject(new Error('Fetching ' + src));
   }
 
-  function cleanup() {
+  function cleanup () {
     script.removeEventListener('load', load, false);
     script.removeEventListener('error', error, false);
     document.head.removeChild(script);
