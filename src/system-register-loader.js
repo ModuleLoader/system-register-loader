@@ -50,7 +50,7 @@ var fs;
 // instantiate just needs to run System.register
 // so we load the module name as a URL, and expect that to run System.register
 var PROCESS_REGISTER_CONTEXT = RegisterLoader.processRegisterContext;
-SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function (key, metadata) {
+SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function (key, metadata, processAnonRegister) {
   var thisLoader = this;
 
   return new Promise(function (resolve, reject) {
@@ -67,13 +67,13 @@ SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function (key, meta
             sourceString = sourceString.substr(1);
 
           (0, eval)(sourceString);
-          thisLoader[PROCESS_REGISTER_CONTEXT](key);
+          processAnonRegister();
           resolve();
         });
       });
     else if (isBrowser)
       scriptLoad(key, function () {
-        thisLoader[PROCESS_REGISTER_CONTEXT](key);
+        processAnonRegister();
         resolve();
       }, reject);
     else
