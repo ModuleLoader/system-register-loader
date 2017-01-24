@@ -1,3 +1,3 @@
-System.registerDynamic([], function(require, exports, module) {
+System.registerDynamic([], true, function(require, exports, module) {
   module.exports = function () {};
 });

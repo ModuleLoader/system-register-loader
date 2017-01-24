@@ -8,7 +8,7 @@
     });
 
     loader.import('./does-not-exist.js');
-    loader.import('data:;base64,U3lzdGVtLnJlZ2lzdGVyKFtdLCBmdW5jdGlvbihfZXhwb3J0KSB7DQogIHJldHVybiBmdW5jdGlvbiAoKSB7DQogICAgX2V4cG9ydCgncCcsIDUpOw0KICB9Ow0KfSk7').then(function (m) {
+    loader.import('data:text/plain;charset=utf-8;base64,U3lzdGVtLnJlZ2lzdGVyKFtdLCBmdW5jdGlvbihfZXhwb3J0KSB7DQogIHJldHVybiB7DQogICAgc2V0dGVyczogW10sDQogICAgZXhlY3V0ZTogZnVuY3Rpb24gKCkgew0KICAgICAgX2V4cG9ydCgncCcsIDUpOw0KICAgIH0NCiAgfTsNCn0pOw==').then(function (m) {
       console.log(m);
     });
   </script>

@@ -1,7 +1,10 @@
 System.register(['./dep.js'], function($__export) {
-  return function() {
-    $__export({
-      hello: 'world'
-    });
+  return {
+    setters: [],
+    execute: function() {
+      $__export({
+        hello: 'world'
+      });
+    }
   };
 });
