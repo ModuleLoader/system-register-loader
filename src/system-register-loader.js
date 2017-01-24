@@ -1,5 +1,6 @@
 import RegisterLoader from 'es-module-loader/core/register-loader.js';
 import { isBrowser, isNode, global, baseURI, fileUrlToPath } from 'es-module-loader/core/common.js';
+import { resolveIfNotPlain } from 'es-module-loader/core/resolve.js';
 
 /*
  * Example System Register loader
@@ -8,7 +9,10 @@ import { isBrowser, isNode, global, baseURI, fileUrlToPath } from 'es-module-loa
  * Uses <script> injection in the browser, and fs in Node
  * If the module does not call System.register, an error will be thrown
  */
-function SystemRegisterLoader () {
+function SystemRegisterLoader (baseKey) {
+  if (baseKey)
+    this.baseKey = resolveIfNotPlain(baseKey, baseURI) || resolveIfNotPlain('./' + baseKey, baseURI);
+
   RegisterLoader.call(this);
 
   var loader = this;
@@ -35,7 +39,7 @@ SystemRegisterLoader.prototype = Object.create(RegisterLoader.prototype);
 // normalize is never given a relative name like "./x", that part is already handled
 // so we just need to do plain name detect to throw as in the WhatWG spec
 SystemRegisterLoader.prototype[RegisterLoader.resolve] = function (key, parent) {
-  var resolved = RegisterLoader.prototype[RegisterLoader.resolve].call(this, key, parent);
+  var resolved = RegisterLoader.prototype[RegisterLoader.resolve].call(this, key, parent || this.baseKey);
   if (!resolved)
     throw new RangeError('System.register loader does not resolve plain module names, resolving "' + key + '" to ' + parent);
   return resolved;

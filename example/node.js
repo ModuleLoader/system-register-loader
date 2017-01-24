@@ -1,8 +1,8 @@
 var SystemRegisterLoader = require('../dist/system-register-loader.js');
 
-var loader = new SystemRegisterLoader();
+var loader = new SystemRegisterLoader(__filename);
 
-loader.import('./example/register.js').then(function(m) {
+loader.import('./register.js').then(function(m) {
   console.log(m);
 })
 .catch(function(err) {
