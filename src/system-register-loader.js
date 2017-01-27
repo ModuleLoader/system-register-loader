@@ -49,10 +49,7 @@ var fs;
 
 // instantiate just needs to run System.register
 // so we load the module name as a URL, and expect that to run System.register
-var PROCESS_REGISTER_CONTEXT = RegisterLoader.processRegisterContext;
 SystemRegisterLoader.prototype[RegisterLoader.instantiate] = function (key, processAnonRegister) {
-  var thisLoader = this;
-
   return new Promise(function (resolve, reject) {
     if (isNode)
       Promise.resolve(fs || (fs = typeof require !== 'undefined' ? require('fs') : loader.import('fs').then(function (m){ return m.default })))
